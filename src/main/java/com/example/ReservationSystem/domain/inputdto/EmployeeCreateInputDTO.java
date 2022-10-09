@@ -13,5 +13,7 @@ public class EmployeeCreateInputDTO {
 
     private String firstname;
     private String surname;
+    private String login;
+    private String password;
 
 }

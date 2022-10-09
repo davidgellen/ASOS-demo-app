@@ -32,6 +32,12 @@ public class Employee implements Serializable {
     @Column(name = "surname")
     private String surname;
 
+    @Column(name = "login")
+    private String login;
+
+    @Column(name = "password")
+    private String password;
+
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "employee")
     private List<Reservation> reservations = new ArrayList<>();
 
