@@ -5,7 +5,6 @@ import com.example.ReservationSystem.domain.entity.Employee;
 import com.example.ReservationSystem.domain.inputdto.EmployeeCreateInputDTO;
 import org.mapstruct.Mapper;
 import org.mapstruct.ReportingPolicy;
-import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 
 @Component
