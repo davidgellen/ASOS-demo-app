@@ -2,8 +2,6 @@ package com.example.ReservationSystem.domain.dto;
 
 import lombok.*;
 
-import java.util.List;
-
 @Getter
 @Setter
 @Builder
