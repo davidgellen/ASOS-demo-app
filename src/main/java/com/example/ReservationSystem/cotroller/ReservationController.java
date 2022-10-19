@@ -1,10 +1,7 @@
 package com.example.ReservationSystem.cotroller;
 
-import com.example.ReservationSystem.domain.dto.EmployeeDTO;
 import com.example.ReservationSystem.domain.dto.ReservationDTO;
-import com.example.ReservationSystem.domain.inputdto.EmployeeCreateInputDTO;
 import com.example.ReservationSystem.domain.inputdto.ReservationCreateInputDTO;
-import com.example.ReservationSystem.exception.EmployeeNotFoundException;
 import com.example.ReservationSystem.exception.ReservationNotFoundException;
 import com.example.ReservationSystem.service.ReservationService;
 import lombok.RequiredArgsConstructor;
@@ -57,5 +54,17 @@ public class ReservationController {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), e);
         }
     }
+
+    @PostMapping("/{amount}")
+    public ResponseEntity<?> createMultiple(@PathVariable Long amount) {
+        try {
+            reservationService.generateMultiple(amount);
+            return ResponseEntity.noContent().build();
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), e);
+        }
+    }
+
 
 }

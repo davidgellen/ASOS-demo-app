@@ -10,7 +10,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 @Service
 @RequiredArgsConstructor
@@ -43,5 +45,28 @@ public class SeatService {
         Seat seat = seatMapper.toSeat(inputDTO);
         seatRepository.save(seat);
         return seatMapper.toDto(seat);
+    }
+
+    public void generateMultiple(Long amount) {
+        List<Seat> seats = new ArrayList<>();
+        for (int i = 0; i < amount; i++) {
+            seats.add(generateSeat());
+        }
+        seatRepository.saveAll(seats);
+    }
+
+    private Seat generateSeat() {
+        Seat seat = new Seat(); // because we don't like DP and lombok' s builder
+        seat.setCoordinatesX(generateRandomNumber(1000));
+        seat.setCoordinatesY(generateRandomNumber(1000));
+        return seat;
+    }
+
+    private Long generateRandomNumber(Integer start) {
+        return (long) new Random().nextInt(start);
+    }
+
+    public Integer getTotalAmount() {
+        return seatRepository.getTotalAmount();
     }
 }

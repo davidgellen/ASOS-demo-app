@@ -10,13 +10,21 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 @Service
 @RequiredArgsConstructor
 public class ReservationService {
 
     private final ReservationRepository reservationRepository;
+
+    private final SeatService seatService;
+    private final EmployeeService employeeService;
 
     @Autowired
     protected ReservationMapper reservationMapper;
@@ -43,5 +51,28 @@ public class ReservationService {
         Reservation reservation = reservationMapper.toReservation(inputDTO);
         reservationRepository.save(reservation);
         return reservationMapper.toDto(reservation);
+    }
+
+    public void generateMultiple(Long amount) {
+        Integer seatAmount = seatService.getTotalAmount();
+        Integer employeeAmount = employeeService.getTotalAmount();
+        List<Reservation> reservations = new ArrayList<>();
+        for (int i = 0; i < amount; i++) {
+            Reservation reservation = new Reservation();
+            reservation.setEmployee(employeeService.findById((long) new Random().nextInt(employeeAmount - 1) + 1));
+            reservation.setCreatedBy(employeeService.findById((long) new Random().nextInt(employeeAmount - 1) + 1));
+            reservation.setSeat(seatService.findById((long) (new Random().nextInt(seatAmount - 1) + 1)));
+            reservation.setStartTime(generateRandomDate());
+            reservation.setEndTime(generateRandomDate());
+            reservations.add(reservation);
+        }
+        reservationRepository.saveAll(reservations);
+    }
+
+    private LocalDateTime generateRandomDate() {
+        long minDay = LocalDate.of(1970, 1, 1).toEpochDay();
+        long maxDay = LocalDate.of(2015, 12, 31).toEpochDay();
+        long randomDay = ThreadLocalRandom.current().nextLong(minDay, maxDay);
+        return LocalDate.ofEpochDay(randomDay).atTime(new Random().nextInt(23), new Random().nextInt(59));
     }
 }
