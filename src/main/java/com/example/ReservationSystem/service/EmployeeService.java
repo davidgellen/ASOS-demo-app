@@ -8,10 +8,11 @@ import com.example.ReservationSystem.mapper.EmployeeMapper;
 import com.example.ReservationSystem.repository.EmployeeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 @Service
 @RequiredArgsConstructor
@@ -47,4 +48,34 @@ public class EmployeeService {
         employeeRepository.save(employee);
         return employeeMapper.toDto(employee);
     }
+
+    public void generateMultiple(Long amount) {
+        List<Employee> employees = new ArrayList<>();
+        for (int i = 0; i < amount; i++) {
+            employees.add(generateEmployee());
+        }
+        employeeRepository.saveAll(employees);
+    }
+
+    private Employee generateEmployee() {
+        Employee employee = new Employee();
+        employee.setFirstname(generateRandomString(8));
+        employee.setSurname(generateRandomString(12));
+        employee.setLogin(generateRandomString(6));
+        employee.setPassword(generateRandomString(15));
+        return employee;
+    }
+
+    private String generateRandomString(Integer targetStringLength) {
+        return new Random().ints(48, 123)
+                .filter(i -> (i <= 57 || i >= 65) && (i <= 90 || i >= 97))
+                .limit(targetStringLength)
+                .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
+                .toString();
+    }
+
+    public Integer getTotalAmount() {
+        return employeeRepository.getTotalAmount();
+    }
+
 }

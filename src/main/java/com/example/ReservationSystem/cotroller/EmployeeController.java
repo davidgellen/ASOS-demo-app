@@ -55,4 +55,15 @@ public class EmployeeController {
         }
     }
 
+    @PostMapping("/{amount}")
+    public ResponseEntity<?> createMultiple(@PathVariable Long amount) {
+        try {
+            employeeService.generateMultiple(amount);
+            return ResponseEntity.noContent().build();
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), e);
+        }
+    }
+
 }
