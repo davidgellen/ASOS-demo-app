@@ -85,6 +85,27 @@
 								}
 							},
 							"response": []
+						},
+						{
+							"name": "Create N random",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "localhost:8080/api/v1/employee/10",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"api",
+										"v1",
+										"employee",
+										"10"
+									]
+								}
+							},
+							"response": []
 						}
 					]
 				}
@@ -166,6 +187,27 @@
 										"api",
 										"v1",
 										"seats"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create N random",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "localhost:8080/api/v1/seats/10",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"api",
+										"v1",
+										"seats",
+										"10"
 									]
 								}
 							},
@@ -253,6 +295,14 @@
 										"reservations"
 									]
 								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create N random",
+							"request": {
+								"method": "GET",
+								"header": []
 							},
 							"response": []
 						}
