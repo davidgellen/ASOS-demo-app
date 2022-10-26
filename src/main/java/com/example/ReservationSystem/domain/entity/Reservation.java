@@ -12,6 +12,7 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity(name = "reservation")
+//@Document("reservation")
 @EntityListeners(AuditingEntityListener.class)
 @Getter
 @Setter

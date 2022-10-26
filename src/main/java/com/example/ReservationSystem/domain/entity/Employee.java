@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity(name = "employee")
+//@Document("employee")
 @EntityListeners(AuditingEntityListener.class)
 @Getter
 @Setter
