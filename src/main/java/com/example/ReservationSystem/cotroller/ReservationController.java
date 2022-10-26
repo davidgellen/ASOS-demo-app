@@ -72,11 +72,21 @@ public class ReservationController {
     }
 
 
-
     @PostMapping("")
     public ResponseEntity<ReservationDTO> create(@RequestBody ReservationCreateInputDTO inputDto) {
         try {
             ReservationDTO reservation = reservationService.create(inputDto);
+            return ResponseEntity.ok(reservation);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), e);
+        }
+    }
+
+    @PostMapping("/redis")
+    public ResponseEntity<String> createRedis(@RequestBody ReservationCreateInputDTO inputDto) {
+        try {
+            String reservation = reservationService.createRedis(inputDto);
             return ResponseEntity.ok(reservation);
         } catch (Exception e) {
             e.printStackTrace();
@@ -114,6 +124,17 @@ public class ReservationController {
     public ResponseEntity<ReservationDTO> delete(@PathVariable Long id) {
         try {
             reservationService.deleteById(id);
+            return ResponseEntity.noContent().build();
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), e);
+        }
+    }
+
+    @DeleteMapping("/redis/{id}")
+    public ResponseEntity<Long> deleteRedis(@PathVariable Long id) {
+        try {
+            reservationService.deleteByIdRedis(id);
             return ResponseEntity.noContent().build();
         } catch (Exception e) {
             e.printStackTrace();

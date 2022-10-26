@@ -68,8 +68,8 @@ public class ReservationService {
         return reservationMapper.toDto(reservation);
     }
 
-    public void createRedis(Reservation reservation){
-//        redisService.cre
+    public String createRedis(ReservationCreateInputDTO reservation){
+        return redisService.createReservation(reservation);
     }
 
     public void generateMultiple(Long amount) {
@@ -108,6 +108,10 @@ public class ReservationService {
 
     public void deleteById(Long id) {
         reservationRepository.deleteById(id);
+    }
+
+    public Long deleteByIdRedis(Long id) {
+        return redisService.deleteReservation(id);
     }
 
     public List<Reservation> getAllBySeatId(Long seatId) {
