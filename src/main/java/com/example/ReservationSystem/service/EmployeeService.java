@@ -62,7 +62,7 @@ public class EmployeeService {
         employeeRepository.saveAll(employees);
     }
 
-    private Employee generateEmployee() {
+    public Employee generateEmployee() {
         Employee employee = new Employee();
         employee.setFirstname(generateRandomString(8));
         employee.setSurname(generateRandomString(12));
