@@ -82,6 +82,17 @@ public class SeatController {
         }
     }
 
+    @PostMapping("/redis")
+    public ResponseEntity<String> createRedis(@RequestBody SeatCreateInputDTO inputDto) {
+        try {
+            String seat = seatService.createRedis(inputDto);
+            return ResponseEntity.ok(seat);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), e);
+        }
+    }
+
     @PutMapping("{id}")
     public ResponseEntity<SeatDTO> update(@PathVariable Long id, @RequestBody SeatCreateInputDTO inputDto) {
         try {
@@ -95,10 +106,34 @@ public class SeatController {
         }
     }
 
+    @PutMapping("/redis/{id}")
+    public ResponseEntity<String> updateRedis(@PathVariable Long id, @RequestBody SeatCreateInputDTO inputDto) {
+        try {
+            String seat = seatService.updateRedis(id, inputDto);
+            return ResponseEntity.ok(seat);
+        } catch (SeatNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage(), e);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), e);
+        }
+    }
+
     @DeleteMapping("{id}")
     public ResponseEntity<SeatDTO> delete(@PathVariable Long id) {
         try {
             seatService.deleteById(id);
+            return ResponseEntity.noContent().build();
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), e);
+        }
+    }
+
+    @DeleteMapping("/redis/{id}")
+    public ResponseEntity<SeatDTO> deleteRedis(@PathVariable Long id) {
+        try {
+            seatService.deleteByIdRedis(id);
             return ResponseEntity.noContent().build();
         } catch (Exception e) {
             e.printStackTrace();

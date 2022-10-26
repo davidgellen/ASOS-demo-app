@@ -33,10 +33,37 @@ public class EmployeeController {
         }
     }
 
+
+    @GetMapping("/redis")
+    public ResponseEntity<Set<Map<String, String>>> findAllRedis() {
+        try {
+            Set<Map<String, String>> employees = employeeService.findAllRedis();
+            return ResponseEntity.ok(employees);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), e);
+        }
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<EmployeeDTO> findById(@PathVariable Long id) {
         try {
             EmployeeDTO employee = employeeService.findDtoById(id);
+            return ResponseEntity.ok(employee);
+        } catch (EmployeeNotFoundException e) {
+            e.printStackTrace();
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage(), e);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), e);
+        }
+    }
+
+
+    @GetMapping("/redis/{id}")
+    public ResponseEntity<?> findByIdRedis(@PathVariable Long id) {
+        try {
+            String employee = employeeService.findByIdRedis(id);
             return ResponseEntity.ok(employee);
         } catch (EmployeeNotFoundException e) {
             e.printStackTrace();
@@ -58,11 +85,35 @@ public class EmployeeController {
         }
     }
 
+    @PostMapping("/redis")
+    public ResponseEntity<String> createRedis(@RequestBody EmployeeCreateInputDTO inputDto) {
+        try {
+            String employee = employeeService.createRedis(inputDto);
+            return ResponseEntity.ok(employee);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), e);
+        }
+    }
+
     @PutMapping("{id}")
     public ResponseEntity<EmployeeDTO> update(@PathVariable Long id, @RequestBody EmployeeCreateInputDTO inputDto) {
         try {
             EmployeeDTO employee = employeeService.update(id, inputDto);
             return ResponseEntity.ok(employee);
+        } catch (EmployeeNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage(), e);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), e);
+        }
+    }
+
+    @PutMapping("/redis/{id}")
+    public ResponseEntity<String> updateRedis(@PathVariable Long id, @RequestBody EmployeeCreateInputDTO inputDto) {
+        try {
+            String response = employeeService.updateRedis(id, inputDto);
+            return ResponseEntity.ok(response);
         } catch (EmployeeNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage(), e);
         } catch (Exception e) {
@@ -82,6 +133,17 @@ public class EmployeeController {
         }
     }
 
+    @DeleteMapping("/redis/{id}")
+    public ResponseEntity<Long> deleteRedis(@PathVariable Long id) {
+        try {
+            employeeService.deleteByIdRedis(id);
+            return ResponseEntity.noContent().build();
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), e);
+        }
+    }
+
     @PostMapping("/{amount}")
     public ResponseEntity<?> createMultiple(@PathVariable Long amount) {
         try {
@@ -93,30 +155,6 @@ public class EmployeeController {
         }
     }
 
-    @GetMapping("/redis/{id}")
-    public ResponseEntity<?> findByIdRedis(@PathVariable Long id) {
-        try {
-            String employee = employeeService.findByIdRedis(id);
-            return ResponseEntity.ok(employee);
-        } catch (EmployeeNotFoundException e) {
-            e.printStackTrace();
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage(), e);
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), e);
-        }
-    }
-
-    @GetMapping("/redis")
-    public ResponseEntity<Set<Map<String, String>>> findAllRedis() {
-        try {
-            Set<Map<String, String>> employees = employeeService.findAllRedis();
-            return ResponseEntity.ok(employees);
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), e);
-        }
-    }
 
 
 

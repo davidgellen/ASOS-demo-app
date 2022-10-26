@@ -97,6 +97,19 @@ public class ReservationController {
         }
     }
 
+    @PutMapping("/redis/{id}")
+    public ResponseEntity<String> updateRedis(@PathVariable Long id, @RequestBody ReservationCreateInputDTO inputDto) {
+        try {
+            String reservation = reservationService.updateRedis(id, inputDto);
+            return ResponseEntity.ok(reservation);
+        } catch (ReservationNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage(), e);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), e);
+        }
+    }
+
     @DeleteMapping("{id}")
     public ResponseEntity<ReservationDTO> delete(@PathVariable Long id) {
         try {

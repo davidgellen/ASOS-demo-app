@@ -102,6 +102,10 @@ public class ReservationService {
         return reservationMapper.toDto(reservation);
     }
 
+    public String updateRedis(Long id, ReservationCreateInputDTO inputDto){
+        return redisService.updateReservation(id, inputDto);
+    }
+
     public void deleteById(Long id) {
         reservationRepository.deleteById(id);
     }

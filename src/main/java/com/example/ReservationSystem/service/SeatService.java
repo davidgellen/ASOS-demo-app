@@ -60,6 +60,10 @@ public class SeatService {
         return seatMapper.toDto(seat);
     }
 
+    public String createRedis(SeatCreateInputDTO inputDTO){
+        return redisService.createSeat(inputDTO);
+    }
+
     public void generateMultiple(Long amount) {
         List<Seat> seats = new ArrayList<>();
         for (int i = 0; i < amount; i++) {
@@ -90,11 +94,19 @@ public class SeatService {
         return seatMapper.toDto(employee);
     }
 
+    public String updateRedis(Long id, SeatCreateInputDTO inputDto){
+        return redisService.updateSeat(id, inputDto);
+    }
+
     public void deleteById(Long id) {
         List<Long> reservations = reservationService.getAllBySeatId(id)
                 .stream().map(Reservation::getId).toList();
         reservationService.deleteByIds(reservations);
         seatRepository.deleteById(id);
+    }
+
+    public Long deleteByIdRedis(Long id){
+        return redisService.deleteSeat(id);
     }
 
 }

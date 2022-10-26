@@ -63,8 +63,8 @@ public class EmployeeService {
         return employeeMapper.toDto(employee);
     }
 
-    public void createRedis(Employee employee){
-        redisService.createEmployee(employee);
+    public String createRedis(EmployeeCreateInputDTO employee){
+        return redisService.createEmployee(employee);
     }
 
     public void generateMultiple(Long amount) {
@@ -73,10 +73,6 @@ public class EmployeeService {
             employees.add(generateEmployee());
         }
         List<Employee> employeesCreated = employeeRepository.saveAll(employees);
-        for (Employee e:
-             employeesCreated) {
-            createRedis(e);
-        }
     }
 
     private Employee generateEmployee() {
@@ -107,11 +103,19 @@ public class EmployeeService {
         return employeeMapper.toDto(employee);
     }
 
+    public String updateRedis(Long id, EmployeeCreateInputDTO inputDto){
+        return redisService.updateEmployee(id, inputDto);
+    }
+
     public void deleteById(Long id) {
         List<Long> reservations = reservationService.getAllByEmployeeId(id)
                 .stream().map(Reservation::getId).toList();
         reservationService.deleteByIds(reservations);
         employeeRepository.deleteById(id);
+    }
+
+    public Long deleteByIdRedis(Long id){
+        return redisService.deleteEmployee(id);
     }
 
 }
