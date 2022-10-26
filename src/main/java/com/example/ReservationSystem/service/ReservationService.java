@@ -8,6 +8,7 @@ import com.example.ReservationSystem.mapper.ReservationMapper;
 import com.example.ReservationSystem.repository.ReservationRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -23,7 +24,9 @@ public class ReservationService {
 
     private final ReservationRepository reservationRepository;
 
-    private final SeatService seatService;
+    @Autowired
+    @Lazy
+    private SeatService seatService;
     private final EmployeeService employeeService;
 
     @Autowired
@@ -35,6 +38,10 @@ public class ReservationService {
 
     public ReservationDTO findDtoById(Long id) throws ReservationNotFoundException {
         return reservationMapper.toDto(this.findById(id));
+    }
+
+    public List<Reservation> findAllByIds(List<Long> ids) {
+        return reservationRepository.findAllById(ids);
     }
 
     public List<Reservation> findAll() {
@@ -75,4 +82,28 @@ public class ReservationService {
         long randomDay = ThreadLocalRandom.current().nextLong(minDay, maxDay);
         return LocalDate.ofEpochDay(randomDay).atTime(new Random().nextInt(23), new Random().nextInt(59));
     }
+
+    public ReservationDTO update(Long id, ReservationCreateInputDTO inputDto) throws ReservationNotFoundException {
+        Reservation reservation = this.findById(id);
+        reservationMapper.update(reservation, inputDto);
+        reservationRepository.save(reservation);
+        return reservationMapper.toDto(reservation);
+    }
+
+    public void deleteById(Long id) {
+        reservationRepository.deleteById(id);
+    }
+
+    public List<Reservation> getAllBySeatId(Long seatId) {
+        return reservationRepository.findBySeat_Id(seatId);
+    }
+
+    public List<Reservation> getAllByEmployeeId(Long employeeId) {
+        return reservationRepository.findByEmployee_Id(employeeId);
+    }
+
+    public void deleteByIds(List<Long> ids) {
+        reservationRepository.deleteAllById(ids);
+    }
+
 }

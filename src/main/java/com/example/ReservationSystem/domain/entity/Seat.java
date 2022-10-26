@@ -32,7 +32,7 @@ public class Seat {
     @Column(name = "coordinates_y")
     private Long coordinatesY;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "seat")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "seat", cascade = CascadeType.ALL)
     private List<Reservation> reservations = new ArrayList<>();
 
     @CreatedDate
