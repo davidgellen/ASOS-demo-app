@@ -94,6 +94,9 @@ public class EmployeeService {
         List<Long> reservations = reservationService.getAllByEmployeeId(id)
                 .stream().map(Reservation::getId).toList();
         reservationService.deleteByIds(reservations);
+        Employee e = this.findById(id);
+        e.getReservations().removeAll(e.getReservations());
+        employeeRepository.save(e);
         employeeRepository.deleteById(id);
     }
 
