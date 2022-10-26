@@ -6,15 +6,14 @@ import com.example.ReservationSystem.domain.inputdto.ReservationCreateInputDTO;
 import com.example.ReservationSystem.exception.ReservationNotFoundException;
 import com.example.ReservationSystem.mapper.ReservationMapper;
 import com.example.ReservationSystem.repository.ReservationRepository;
+import com.example.ReservationSystem.service.redis.RedisService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 
 @Service
@@ -23,6 +22,7 @@ public class ReservationService {
 
     private final ReservationRepository reservationRepository;
 
+    private final RedisService redisService;
     private final SeatService seatService;
     private final EmployeeService employeeService;
 
@@ -31,6 +31,10 @@ public class ReservationService {
 
     public Reservation findById(Long id) throws ReservationNotFoundException {
         return reservationRepository.findById(id).orElseThrow(() -> new ReservationNotFoundException(id));
+    }
+
+    public String findByIdRedis(Long id){
+        return redisService.findReservationById(id).toString();
     }
 
     public ReservationDTO findDtoById(Long id) throws ReservationNotFoundException {
@@ -47,10 +51,18 @@ public class ReservationService {
                 .toList();
     }
 
+    public Set<Map<String, Object>> findAllRedis(){
+        return redisService.findReservationsAll();
+    }
+
     public ReservationDTO create(ReservationCreateInputDTO inputDTO) {
         Reservation reservation = reservationMapper.toReservation(inputDTO);
         reservationRepository.save(reservation);
         return reservationMapper.toDto(reservation);
+    }
+
+    public void createRedis(Reservation reservation){
+//        redisService.cre
     }
 
     public void generateMultiple(Long amount) {

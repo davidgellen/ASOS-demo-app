@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 @RestController
 @RequiredArgsConstructor
@@ -30,10 +32,35 @@ public class SeatController {
         }
     }
 
+    @GetMapping("/redis")
+    public ResponseEntity<Set<Map<String, String>>> findAllRedis() {
+        try {
+            Set<Map<String, String>> seats = seatService.findAllRedis();
+            return ResponseEntity.ok(seats);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), e);
+        }
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<SeatDTO> findById(@PathVariable Long id) {
         try {
             SeatDTO seat = seatService.findDtoById(id);
+            return ResponseEntity.ok(seat);
+        } catch (SeatNotFoundException e) {
+            e.printStackTrace();
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage(), e);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), e);
+        }
+    }
+
+    @GetMapping("/redis/{id}")
+    public ResponseEntity<?> findByIdRedis(@PathVariable Long id) {
+        try {
+            String seat = seatService.findByIdRedis(id);
             return ResponseEntity.ok(seat);
         } catch (SeatNotFoundException e) {
             e.printStackTrace();

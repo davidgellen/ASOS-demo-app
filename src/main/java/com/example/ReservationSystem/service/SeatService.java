@@ -6,25 +6,28 @@ import com.example.ReservationSystem.domain.inputdto.SeatCreateInputDTO;
 import com.example.ReservationSystem.exception.SeatNotFoundException;
 import com.example.ReservationSystem.mapper.SeatMapper;
 import com.example.ReservationSystem.repository.SeatRepository;
+import com.example.ReservationSystem.service.redis.RedisService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
 public class SeatService {
 
     private final SeatRepository seatRepository;
-
+    private final RedisService redisService;
     @Autowired
     protected SeatMapper seatMapper;
 
     public Seat findById(Long id) throws SeatNotFoundException {
         return seatRepository.findById(id).orElseThrow(() -> new SeatNotFoundException(id));
+    }
+
+    public String findByIdRedis(Long id){
+        return redisService.findSeatById(id).toString();
     }
 
     public SeatDTO findDtoById(Long id) throws SeatNotFoundException {
@@ -39,6 +42,10 @@ public class SeatService {
         return this.findAll().stream()
                 .map(seatMapper::toDto)
                 .toList();
+    }
+
+    public Set<Map<String, String>> findAllRedis(){
+        return redisService.findSeatsAll();
     }
 
     public SeatDTO create(SeatCreateInputDTO inputDTO) {

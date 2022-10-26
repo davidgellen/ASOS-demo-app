@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 @RestController
 @RequiredArgsConstructor
@@ -23,6 +25,17 @@ public class ReservationController {
     public ResponseEntity<List<ReservationDTO>> findAll() {
         try {
             List<ReservationDTO> reservations = reservationService.findAllDto();
+            return ResponseEntity.ok(reservations);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), e);
+        }
+    }
+
+    @GetMapping("/redis")
+    public ResponseEntity<Set<Map<String, Object>>> findAllRedis() {
+        try {
+            Set<Map<String, Object>> reservations = reservationService.findAllRedis();
             return ResponseEntity.ok(reservations);
         } catch (Exception e) {
             e.printStackTrace();
@@ -43,6 +56,22 @@ public class ReservationController {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), e);
         }
     }
+
+    @GetMapping("/redis/{id}")
+    public ResponseEntity<?> findByIdRedis(@PathVariable Long id) {
+        try {
+            String reservation = reservationService.findByIdRedis(id);
+            return ResponseEntity.ok(reservation);
+        } catch (ReservationNotFoundException e) {
+            e.printStackTrace();
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage(), e);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), e);
+        }
+    }
+
+
 
     @PostMapping("")
     public ResponseEntity<ReservationDTO> create(@RequestBody ReservationCreateInputDTO inputDto) {

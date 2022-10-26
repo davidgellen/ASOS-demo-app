@@ -6,26 +6,29 @@ import com.example.ReservationSystem.domain.inputdto.EmployeeCreateInputDTO;
 import com.example.ReservationSystem.exception.EmployeeNotFoundException;
 import com.example.ReservationSystem.mapper.EmployeeMapper;
 import com.example.ReservationSystem.repository.EmployeeRepository;
+import com.example.ReservationSystem.service.redis.RedisService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
 public class EmployeeService {
 
     private final EmployeeRepository employeeRepository;
-
+    private final RedisService redisService;
 //    @Lazy
     @Autowired
     protected EmployeeMapper employeeMapper;
 
     public Employee findById(Long id) throws EmployeeNotFoundException {
         return employeeRepository.findById(id).orElseThrow(() -> new EmployeeNotFoundException(id));
+    }
+
+    public String findByIdRedis(Long id){
+        return redisService.findEmployeeById(id).toString();
     }
 
     public EmployeeDTO findDtoById(Long id) throws EmployeeNotFoundException {
@@ -43,10 +46,18 @@ public class EmployeeService {
                 .toList();
     }
 
+    public Set<Map<String, String>> findAllRedis(){
+        return redisService.findEmployeesAll();
+    }
+
     public EmployeeDTO create(EmployeeCreateInputDTO inputDTO) {
         Employee employee = employeeMapper.toEmployee(inputDTO);
         employeeRepository.save(employee);
         return employeeMapper.toDto(employee);
+    }
+
+    public void createRedis(Employee employee){
+        redisService.createEmployee(employee);
     }
 
     public void generateMultiple(Long amount) {
@@ -54,7 +65,11 @@ public class EmployeeService {
         for (int i = 0; i < amount; i++) {
             employees.add(generateEmployee());
         }
-        employeeRepository.saveAll(employees);
+        List<Employee> employeesCreated = employeeRepository.saveAll(employees);
+        for (Employee e:
+             employeesCreated) {
+            createRedis(e);
+        }
     }
 
     private Employee generateEmployee() {

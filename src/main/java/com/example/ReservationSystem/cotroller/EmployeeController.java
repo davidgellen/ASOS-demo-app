@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 @RestController
 @RequiredArgsConstructor
@@ -18,6 +20,7 @@ import java.util.List;
 public class EmployeeController {
 
     private final EmployeeService employeeService;
+
 
     @GetMapping("")
     public ResponseEntity<List<EmployeeDTO>> findAll() {
@@ -65,5 +68,32 @@ public class EmployeeController {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), e);
         }
     }
+
+    @GetMapping("/redis/{id}")
+    public ResponseEntity<?> findByIdRedis(@PathVariable Long id) {
+        try {
+            String employee = employeeService.findByIdRedis(id);
+            return ResponseEntity.ok(employee);
+        } catch (EmployeeNotFoundException e) {
+            e.printStackTrace();
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage(), e);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), e);
+        }
+    }
+
+    @GetMapping("/redis")
+    public ResponseEntity<Set<Map<String, String>>> findAllRedis() {
+        try {
+            Set<Map<String, String>> employees = employeeService.findAllRedis();
+            return ResponseEntity.ok(employees);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), e);
+        }
+    }
+
+
 
 }
