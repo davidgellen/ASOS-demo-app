@@ -3,8 +3,7 @@ package com.example.ReservationSystem.mapper;
 import com.example.ReservationSystem.domain.dto.EmployeeDTO;
 import com.example.ReservationSystem.domain.entity.Employee;
 import com.example.ReservationSystem.domain.inputdto.EmployeeCreateInputDTO;
-import org.mapstruct.Mapper;
-import org.mapstruct.ReportingPolicy;
+import org.mapstruct.*;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -15,4 +14,10 @@ public abstract class EmployeeMapper {
 
     public abstract Employee toEmployee(EmployeeCreateInputDTO employeeInputDTO);
 
+    @Mappings({
+            @Mapping(target = "id", ignore = true),
+            @Mapping(target = "reservations", ignore = true),
+            @Mapping(target = "createdAt", ignore = true)
+    })
+    public abstract void update(@MappingTarget Employee employee, EmployeeCreateInputDTO inputDto);
 }

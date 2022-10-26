@@ -55,6 +55,30 @@ public class ReservationController {
         }
     }
 
+    @PutMapping("{id}")
+    public ResponseEntity<ReservationDTO> update(@PathVariable Long id, @RequestBody ReservationCreateInputDTO inputDto) {
+        try {
+            ReservationDTO reservation = reservationService.update(id, inputDto);
+            return ResponseEntity.ok(reservation);
+        } catch (ReservationNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage(), e);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), e);
+        }
+    }
+
+    @DeleteMapping("{id}")
+    public ResponseEntity<ReservationDTO> delete(@PathVariable Long id) {
+        try {
+            reservationService.deleteById(id);
+            return ResponseEntity.noContent().build();
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), e);
+        }
+    }
+
     @PostMapping("/{amount}")
     public ResponseEntity<?> createMultiple(@PathVariable Long amount) {
         try {
