@@ -1,6 +1,7 @@
 package com.example.ReservationSystem.service;
 
 import com.example.ReservationSystem.domain.dto.SeatDTO;
+import com.example.ReservationSystem.domain.entity.Reservation;
 import com.example.ReservationSystem.domain.entity.Seat;
 import com.example.ReservationSystem.domain.inputdto.SeatCreateInputDTO;
 import com.example.ReservationSystem.exception.SeatNotFoundException;
@@ -8,6 +9,7 @@ import com.example.ReservationSystem.mapper.SeatMapper;
 import com.example.ReservationSystem.repository.SeatRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -19,6 +21,10 @@ import java.util.Random;
 public class SeatService {
 
     private final SeatRepository seatRepository;
+
+    @Autowired
+    @Lazy
+    private ReservationService reservationService;
 
     @Autowired
     protected SeatMapper seatMapper;
@@ -69,4 +75,19 @@ public class SeatService {
     public Integer getTotalAmount() {
         return seatRepository.getTotalAmount();
     }
+
+    public SeatDTO update(Long id, SeatCreateInputDTO inputDto) throws SeatNotFoundException {
+        Seat employee = this.findById(id);
+        seatMapper.update(employee, inputDto);
+        seatRepository.save(employee);
+        return seatMapper.toDto(employee);
+    }
+
+    public void deleteById(Long id) {
+        List<Long> reservations = reservationService.getAllBySeatId(id)
+                .stream().map(Reservation::getId).toList();
+        reservationService.deleteByIds(reservations);
+        seatRepository.deleteById(id);
+    }
+
 }
