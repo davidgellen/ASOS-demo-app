@@ -82,6 +82,30 @@ public class SeatController {
         }
     }
 
+    @PutMapping("{id}")
+    public ResponseEntity<SeatDTO> update(@PathVariable Long id, @RequestBody SeatCreateInputDTO inputDto) {
+        try {
+            SeatDTO seat = seatService.update(id, inputDto);
+            return ResponseEntity.ok(seat);
+        } catch (SeatNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage(), e);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), e);
+        }
+    }
+
+    @DeleteMapping("{id}")
+    public ResponseEntity<SeatDTO> delete(@PathVariable Long id) {
+        try {
+            seatService.deleteById(id);
+            return ResponseEntity.noContent().build();
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), e);
+        }
+    }
+
     @PostMapping("/{amount}")
     public ResponseEntity<?> createMultiple(@PathVariable Long amount) {
         try {

@@ -2,6 +2,7 @@ package com.example.ReservationSystem.service;
 
 import com.example.ReservationSystem.domain.dto.EmployeeDTO;
 import com.example.ReservationSystem.domain.entity.Employee;
+import com.example.ReservationSystem.domain.entity.Reservation;
 import com.example.ReservationSystem.domain.inputdto.EmployeeCreateInputDTO;
 import com.example.ReservationSystem.exception.EmployeeNotFoundException;
 import com.example.ReservationSystem.mapper.EmployeeMapper;
@@ -9,6 +10,7 @@ import com.example.ReservationSystem.repository.EmployeeRepository;
 import com.example.ReservationSystem.service.redis.RedisService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -20,6 +22,11 @@ public class EmployeeService {
     private final EmployeeRepository employeeRepository;
     private final RedisService redisService;
 //    @Lazy
+
+    @Autowired
+    @Lazy
+    private ReservationService reservationService;
+
     @Autowired
     protected EmployeeMapper employeeMapper;
 
@@ -91,6 +98,20 @@ public class EmployeeService {
 
     public Integer getTotalAmount() {
         return employeeRepository.getTotalAmount();
+    }
+
+    public EmployeeDTO update(Long id, EmployeeCreateInputDTO inputDto) throws EmployeeNotFoundException {
+        Employee employee = this.findById(id);
+        employeeMapper.update(employee, inputDto);
+        employeeRepository.save(employee);
+        return employeeMapper.toDto(employee);
+    }
+
+    public void deleteById(Long id) {
+        List<Long> reservations = reservationService.getAllByEmployeeId(id)
+                .stream().map(Reservation::getId).toList();
+        reservationService.deleteByIds(reservations);
+        employeeRepository.deleteById(id);
     }
 
 }

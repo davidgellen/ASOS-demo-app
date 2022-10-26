@@ -58,6 +58,30 @@ public class EmployeeController {
         }
     }
 
+    @PutMapping("{id}")
+    public ResponseEntity<EmployeeDTO> update(@PathVariable Long id, @RequestBody EmployeeCreateInputDTO inputDto) {
+        try {
+            EmployeeDTO employee = employeeService.update(id, inputDto);
+            return ResponseEntity.ok(employee);
+        } catch (EmployeeNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage(), e);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), e);
+        }
+    }
+
+    @DeleteMapping("{id}")
+    public ResponseEntity<EmployeeDTO> delete(@PathVariable Long id) {
+        try {
+            employeeService.deleteById(id);
+            return ResponseEntity.noContent().build();
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), e);
+        }
+    }
+
     @PostMapping("/{amount}")
     public ResponseEntity<?> createMultiple(@PathVariable Long amount) {
         try {

@@ -38,7 +38,7 @@ public class Employee implements Serializable {
     @Column(name = "password")
     private String password;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "employee")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "employee", cascade = CascadeType.ALL)
     private List<Reservation> reservations = new ArrayList<>();
 
     @CreatedDate

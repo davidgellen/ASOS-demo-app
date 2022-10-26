@@ -5,10 +5,7 @@ import com.example.ReservationSystem.domain.entity.Reservation;
 import com.example.ReservationSystem.domain.inputdto.ReservationCreateInputDTO;
 import com.example.ReservationSystem.service.EmployeeService;
 import com.example.ReservationSystem.service.SeatService;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.Mappings;
-import org.mapstruct.ReportingPolicy;
+import org.mapstruct.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -34,4 +31,13 @@ public abstract class ReservationMapper{
     })
     public abstract Reservation toReservation(ReservationCreateInputDTO createInputDTO);
 
+    @Mappings({
+            @Mapping(target = "id", ignore = true),
+            @Mapping(target = "createdAt", ignore = true),
+            @Mapping(expression = "java(seatService.findById(inputDto.getSeatId()))",
+                    target = "seat"),
+            @Mapping(expression = "java(employeeService.findById(inputDto.getEmployeeId()))",
+                    target = "employee"),
+    })
+    public abstract void update(@MappingTarget Reservation reservation, ReservationCreateInputDTO inputDto);
 }
