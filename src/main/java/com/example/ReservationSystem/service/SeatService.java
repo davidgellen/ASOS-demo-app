@@ -90,4 +90,11 @@ public class SeatService {
         seatRepository.deleteById(id);
     }
 
+    public List<Seat> findAllWIthReservationId(Long id) {
+        return seatRepository.findByReservations_Id(id);
+    }
+
+    public void saveAll(List<Seat> seats) {
+        seatRepository.saveAll(seats);
+    }
 }

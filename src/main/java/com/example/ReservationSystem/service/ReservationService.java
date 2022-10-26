@@ -1,7 +1,9 @@
 package com.example.ReservationSystem.service;
 
 import com.example.ReservationSystem.domain.dto.ReservationDTO;
+import com.example.ReservationSystem.domain.entity.Employee;
 import com.example.ReservationSystem.domain.entity.Reservation;
+import com.example.ReservationSystem.domain.entity.Seat;
 import com.example.ReservationSystem.domain.inputdto.ReservationCreateInputDTO;
 import com.example.ReservationSystem.exception.ReservationNotFoundException;
 import com.example.ReservationSystem.mapper.ReservationMapper;
@@ -90,7 +92,21 @@ public class ReservationService {
         return reservationMapper.toDto(reservation);
     }
 
-    public void deleteById(Long id) {
+    public void deleteById(Long id) throws ReservationNotFoundException {
+        Reservation reservation = this.findById(id);
+
+        List<Employee> employees = employeeService.findAllWIthReservationId(id);
+        employees.forEach(employee -> {
+            employee.getReservations().remove(reservation);
+        });
+        employeeService.saveAll(employees);
+
+        List<Seat> seats = seatService.findAllWIthReservationId(id);
+        seats.forEach(seat -> {
+            seat.getReservations().remove(reservation);
+        });
+        seatService.saveAll(seats);
+
         reservationRepository.deleteById(id);
     }
 

@@ -97,4 +97,11 @@ public class EmployeeService {
         employeeRepository.deleteById(id);
     }
 
+    public List<Employee> findAllWIthReservationId(Long id) {
+        return employeeRepository.findByReservations_Id(id);
+    }
+
+    public void saveAll(List<Employee> employees) {
+        employeeRepository.saveAll(employees);
+    }
 }
