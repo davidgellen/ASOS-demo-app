@@ -141,10 +141,33 @@ public class SeatController {
         }
     }
 
+
+    @DeleteMapping("/redis")
+    public ResponseEntity<Long> deleteAllRedis() {
+        try {
+            seatService.deleteAllRedis();
+            return ResponseEntity.noContent().build();
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), e);
+        }
+    }
+
     @PostMapping("/{amount}")
     public ResponseEntity<?> createMultiple(@PathVariable Long amount) {
         try {
             seatService.generateMultiple(amount);
+            return ResponseEntity.noContent().build();
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), e);
+        }
+    }
+
+    @PostMapping("/redis/{amount}")
+    public ResponseEntity<?> createMultipleRedis(@PathVariable Long amount) {
+        try {
+            seatService.generateMultipleRedis(amount);
             return ResponseEntity.noContent().build();
         } catch (Exception e) {
             e.printStackTrace();

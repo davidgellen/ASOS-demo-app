@@ -21,5 +21,14 @@ public class ReservationSystemApplication implements CommandLineRunner {
 	@Override
 	public void run(String... args) throws Exception {
 		redisService.connect("redis://localhost:6379/");
+		for(long i = 20350; i<20400; i++){
+			redisService.deleteEmployee(i);
+		}
+		for(long i = 20350; i<20400; i++){
+			redisService.deleteSeat(i);
+		}
+//		for(long i = 20350; i<20400; i++){
+//			redisService.deleteReservation(i);
+//		}
 	}
 }

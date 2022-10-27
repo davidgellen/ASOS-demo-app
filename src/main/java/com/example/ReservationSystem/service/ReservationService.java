@@ -88,6 +88,10 @@ public class ReservationService {
         reservationRepository.saveAll(reservations);
     }
 
+    public void generateMultipleRedis(Long amount){
+        redisService.generateMultipleReservation(amount);
+    }
+
     private LocalDateTime generateRandomDate() {
         long minDay = LocalDate.of(1970, 1, 1).toEpochDay();
         long maxDay = LocalDate.of(2015, 12, 31).toEpochDay();
@@ -126,4 +130,7 @@ public class ReservationService {
         reservationRepository.deleteAllById(ids);
     }
 
+    public String deleteAllRedis(){
+        return redisService.deleteAllReservation();
+    }
 }

@@ -75,6 +75,10 @@ public class EmployeeService {
         List<Employee> employeesCreated = employeeRepository.saveAll(employees);
     }
 
+    public void generateMultipleRedis(Long amount) {
+        redisService.generateMultipleEmployee(amount);
+    }
+
     private Employee generateEmployee() {
         Employee employee = new Employee();
         employee.setFirstname(generateRandomString(8));
@@ -116,6 +120,10 @@ public class EmployeeService {
 
     public Long deleteByIdRedis(Long id){
         return redisService.deleteEmployee(id);
+    }
+
+    public String deleteAllRedis(){
+        return redisService.deleteAllEmployee();
     }
 
 }

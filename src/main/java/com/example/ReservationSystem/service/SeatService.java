@@ -56,7 +56,9 @@ public class SeatService {
 
     public SeatDTO create(SeatCreateInputDTO inputDTO) {
         Seat seat = seatMapper.toSeat(inputDTO);
+        //meraj
         seatRepository.save(seat);
+        //meraj
         return seatMapper.toDto(seat);
     }
 
@@ -70,6 +72,10 @@ public class SeatService {
             seats.add(generateSeat());
         }
         seatRepository.saveAll(seats);
+    }
+
+    public void generateMultipleRedis(Long amount){
+        redisService.generateMultipleSeat(amount);
     }
 
     private Seat generateSeat() {
@@ -107,6 +113,10 @@ public class SeatService {
 
     public Long deleteByIdRedis(Long id){
         return redisService.deleteSeat(id);
+    }
+
+    public String deleteAllRedis(){
+        return redisService.deleteAllSeat();
     }
 
 }

@@ -141,11 +141,32 @@ public class ReservationController {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), e);
         }
     }
+    @DeleteMapping("/redis")
+    public ResponseEntity<Long> deleteAllRedis() {
+        try {
+            reservationService.deleteAllRedis();
+            return ResponseEntity.noContent().build();
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), e);
+        }
+    }
 
     @PostMapping("/{amount}")
     public ResponseEntity<?> createMultiple(@PathVariable Long amount) {
         try {
             reservationService.generateMultiple(amount);
+            return ResponseEntity.noContent().build();
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), e);
+        }
+    }
+
+    @PostMapping("/redis/{amount}")
+    public ResponseEntity<?> createMultipleRedis(@PathVariable Long amount) {
+        try {
+            reservationService.generateMultipleRedis(amount);
             return ResponseEntity.noContent().build();
         } catch (Exception e) {
             e.printStackTrace();

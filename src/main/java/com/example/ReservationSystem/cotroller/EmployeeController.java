@@ -144,10 +144,32 @@ public class EmployeeController {
         }
     }
 
+    @DeleteMapping("/redis")
+    public ResponseEntity<?> deleteAllRedis(){
+        try {
+            employeeService.deleteAllRedis();
+            return ResponseEntity.noContent().build();
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), e);
+        }
+    }
+
     @PostMapping("/{amount}")
     public ResponseEntity<?> createMultiple(@PathVariable Long amount) {
         try {
             employeeService.generateMultiple(amount);
+            return ResponseEntity.noContent().build();
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), e);
+        }
+    }
+
+    @PostMapping("/redis/{amount}")
+    public ResponseEntity<?> createMultipleRedis(@PathVariable Long amount) {
+        try {
+            employeeService.generateMultipleRedis(amount);
             return ResponseEntity.noContent().build();
         } catch (Exception e) {
             e.printStackTrace();
