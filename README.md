@@ -1,5 +1,8 @@
 # ASOS-demo-app
 
+## About
+This project was developed as assignment for Software architecture course on FEI STU, 2022/2023. The project demonstrates the differences between SQL databases and NoSQL databases. Comparison and measurement of each type of NoSQL DB with SQL DB is implemented in its own branch.
+
 How to setup project locally (in Intellij IDEA):
 1. clone the project
 2. download jdk 17+ (Intellij will suggest if no appropriate SDK present)
