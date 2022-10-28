@@ -87,6 +87,9 @@ public class SeatService {
         List<Long> reservations = reservationService.getAllBySeatId(id)
                 .stream().map(Reservation::getId).toList();
         reservationService.deleteByIds(reservations);
+        Seat s = this.findById(id);
+        s.getReservations().removeAll(s.getReservations());
+        seatRepository.save(s);
         seatRepository.deleteById(id);
     }
 
